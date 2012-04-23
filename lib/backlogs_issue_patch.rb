@@ -22,7 +22,7 @@ module Backlogs
 
     module InstanceMethods
       def move_to_project_with_autolink(new_project, new_tracker = nil, options = {})
-        newissue = move_to_project_without_transaction_without_autolink(new_project, new_tracker, options)
+        newissue = move_to_project_without_autolink(new_project, new_tracker, options)
         return newissue if newissue.blank? || !Backlogs.configured?(self.project)
 
         if project_id == newissue.project_id and is_story? and newissue.is_story? and id != newissue.id
