@@ -176,10 +176,10 @@ class RbRelease < ActiveRecord::Base
 
   scope :open, ->{ where(status: 'open') }
   scope :closed, ->{ where(status: 'closed')}
-  scope :visible, lambda {|*args| {
-    :joins => :project,
-    :include => :project,
-    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
+  scope :visible, lambda {|*args| { 
+  		  eager_load(:project).
+  		  where(Project.allowed_to_condition(args.first || User.current, :view_releases)) 
+	} }
 
 
   include Backlogs::ActiveRecord::Attributes
