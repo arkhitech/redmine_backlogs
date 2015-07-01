@@ -191,7 +191,11 @@ class RbStory < Issue
       trackers = [] if trackers.blank?
     end
 
-    trackers = Tracker.where(:id => trackers).all
+    begin
+      trackers = Tracker.where(id: trackers)
+    rescue ActiveRecord::RecordNotFound => e
+      trackers = nil
+    end
     trackers = trackers & options[:project].trackers if options[:project]
     trackers = trackers.sort_by { |t| [t.position] }
 
