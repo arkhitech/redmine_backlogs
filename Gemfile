@@ -1,3 +1,5 @@
+#source 'https://rubygems.org'
+#
 redmine_version_file = File.expand_path("../../../lib/redmine/version.rb",__FILE__)
 if (!File.exists? redmine_version_file)
   redmine_version_file = File.expand_path("lib/redmine/version.rb");
@@ -5,6 +7,16 @@ end
 version_file = IO.read(redmine_version_file)
 redmine_version_minor = version_file.match(/MINOR =/).post_match.match(/\d/)[0].to_i
 redmine_version_major = version_file.match(/MAJOR =/).post_match.match(/\d/)[0].to_i
+
+chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
+chiliproject = File.file?(chiliproject_file)
+
+deps = Hash.new
+@dependencies.map{|dep| deps[dep.name] = dep }
+rails3 = Gem::Dependency.new('rails', '~>3.0')
+RAILS_VERSION_IS_3 = rails3 =~ deps['rails']
+rails4 = Gem::Dependency.new('rails', '~>4.0')
+RAILS_VERSION_IS_4 = rails4 =~ deps['rails']
 
 gem "holidays", "~>1.0.3"
 gem "icalendar"
@@ -31,7 +43,15 @@ group :test do
   gem 'chronic'
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
-  if RAILS_VERSION_IS_3
+  if RAILS_VERSION_IS_4
+    #gem 'cucumber-rails', '~>1.4.0', require: false
+    gem 'cucumber-rails', require: false
+    gem "culerity"
+    gem "cucumber"
+    gem "capybara", "~> 1"
+    #gem "faye-websocket"
+    gem "poltergeist"
+  elsif RAILS_VERSION_IS_3
     unless chiliproject
       gem 'capybara', "~> 1.1" if ENV['IN_RBL_TESTENV'] == 'true' # redmine 2.3 conflicts
       gem "faye-websocket", "~>0.4.7"
@@ -45,17 +65,22 @@ group :test do
       gem "poltergeist", "~>0.6.0"
     end
     gem "cucumber", "=1.1.0"
-    gem 'cucumber-rails2', "~> 0.3.5"
+    gem 'cucumber-rails2', "~> 0.3.5" #FIXME, cant find the sources of Vanuans fork anymore.
     gem "culerity", "=0.2.15"
   end
   gem "database_cleaner"
-  if RAILS_VERSION_IS_3
+  if RAILS_VERSION_IS_4
+    gem "gherkin"
+  elsif RAILS_VERSION_IS_3
     gem "gherkin", "~> 2.6"
   else
     gem "gherkin", "~> 2.5.0"
   end
   gem "redgreen" if RUBY_VERSION < "1.9"
-  if RAILS_VERSION_IS_3
+  if RAILS_VERSION_IS_4
+    gem "rspec"
+    gem "rspec-rails"
+  elsif RAILS_VERSION_IS_3
     gem "rspec", '~>2.11.0'
     gem "rspec-rails", '~> 2.11.0'
   else
