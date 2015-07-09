@@ -113,7 +113,7 @@ module Backlogs
             self.remaining_hours = self.estimated_hours if self.remaining_hours.blank?
             self.estimated_hours = self.remaining_hours if self.estimated_hours.blank?
 
-            self.remaining_hours = 0 if self.status.backlog_is?(:success, self.class.trackers(:trackers)[0])
+            self.remaining_hours = 0 if self.status.backlog_is?(:success, self.tracker)
 
             self.fixed_version = self.story.fixed_version if self.story
             self.start_date = Date.today if self.start_date.blank? && self.status_id != self.tracker.default_status_id
