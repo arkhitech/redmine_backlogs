@@ -92,7 +92,8 @@ class RbSprintsController < RbApplicationController
     end
 
     ids = []
-    Issue.find(:all, :conditions => ['fixed_version_id = ?', @sprint.id]).each {|issue|
+    status = IssueStatus.default.id
+    Issue.where(fixed_version_id: @sprint.id).find_each {|issue|
       ids << issue.id.to_s
       issue.update_attributes!(:created_on => @sprint.sprint_start_date.to_time, :status_id => issue.tracker.default_status_id)
     }
