@@ -184,15 +184,6 @@ class RbTask < Issue
 
   # assumes the task is already under the same story as 'id'
   def move_before(id)
-<<<<<<< 224c74eb365aaa4c17f7f7a1dbbf35a9e2101183
-    # id = nil if id.respond_to?('blank?') && id.blank?
-    # if id.nil?
-    #   sib = self.siblings
-    #   move_to_right_of sib[-1].id if sib.any?
-    # else
-    #   move_to_left_of id
-    # end
-=======
     puts("RbTask::move_before NOT IMPLEMENTED")
     Rails.logger.error("RbTask::move_before NOT IMPLEMENTED")
     return
@@ -203,7 +194,6 @@ class RbTask < Issue
     else
       move_to_left_of id
     end
->>>>>>> work on backlogs_is? and default status issues, disable move_before in rb_task for now
   end
 
   def burndown(sprint = nil, status=nil)
