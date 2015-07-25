@@ -4,7 +4,7 @@ class RbReleaseMultiview < ActiveRecord::Base
   unloadable
   belongs_to :project
 
-  attr_accessible :name, :project_id, :release_ids
+  attr_accessible :name, :project_id, :release_ids, :project, :description
   serialize :release_ids
 
   validates_presence_of :project_id, :name
