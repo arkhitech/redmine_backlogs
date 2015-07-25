@@ -177,7 +177,7 @@ class RbRelease < ActiveRecord::Base
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
-  scope :open, ->{ where(status: 'open') }
+ :open, ->{ where(status: 'open') }
   scope :closed, ->{ where(status: 'closed')}
   scope :visible, lambda {|*args| { 
   		  eager_load(:project).
@@ -203,7 +203,7 @@ class RbRelease < ActiveRecord::Base
 
   # Returns current stories + stories previously scheduled for this release
   def stories_all_time
-    RbStory.joins(:journals => :details).where(
+    RbStory.joins(:journals => :details).includes(:journals => :details).where(
             "(release_id = ?) OR (
             journal_details.property ='attr' and
             journal_details.prop_key = 'release_id' and
@@ -312,7 +312,7 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.includes(:releases).
+        Project.visible.joins(:releases).includes(:releases).
           where("#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
