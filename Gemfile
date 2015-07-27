@@ -31,9 +31,6 @@ end
 gem "open-uri-cached", ">= 0.0.5"
 gem "prawn"
 gem 'json'
-gem "system_timer" if RUBY_VERSION =~ /^1\.8\./ && RUBY_PLATFORM =~ /darwin|linux/
-gem 'activerecord-deprecated_finders', require: 'active_record/deprecated_finders'
-# gem 'sidekiq', "3.1.4"
 
 group :development do
   gem "inifile"
@@ -69,6 +66,7 @@ group :test do
     gem "culerity", "=0.2.15"
   end
   gem "database_cleaner"
+<<<<<<< 528c0066da4ac160b475fd485d34cb25cd3db524
   if RAILS_VERSION_IS_4
     gem "gherkin"
   elsif RAILS_VERSION_IS_3
@@ -93,9 +91,14 @@ group :test do
   else
     gem "rcov",  "=0.9.11"
   end
+=======
+  gem "gherkin"
+  gem "rspec"
+  gem "rspec-rails"
+>>>>>>> remove unused gems cleanup gemfile
   gem "ruby-prof", :platforms => [:ruby]
   gem "spork"
-  gem "test-unit", "=1.2.3" if RUBY_VERSION >= "1.9" and ENV['IN_RBL_TESTENV'] == 'true'
+  gem "test-unit", "=1.2.3"
   gem "timecop", '~> 0.3.5'
 end
 
