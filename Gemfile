@@ -40,62 +40,17 @@ group :test do
   gem 'chronic'
   gem 'ZenTest', "=4.5.0" # 4.6.0 has a nasty bug that breaks autotest
   gem 'autotest-rails'
-  if RAILS_VERSION_IS_4
-    #gem 'cucumber-rails', '~>1.4.0', require: false
-    gem 'cucumber-rails', require: false
-    gem "culerity"
-    gem "cucumber"
-    gem "capybara", "~> 1"
-    #gem "faye-websocket"
-    gem "poltergeist"
-  elsif RAILS_VERSION_IS_3
-    unless chiliproject
-      gem 'capybara', "~> 1.1" if ENV['IN_RBL_TESTENV'] == 'true' # redmine 2.3 conflicts
-      gem "faye-websocket", "~>0.4.7"
-      gem "poltergeist", "~>1.0"
-    end
-    gem 'cucumber-rails', :require => false
-    gem "culerity"
-  else
-    unless chiliproject
-      gem "capybara", "~>1.1.0"
-      gem "poltergeist", "~>0.6.0"
-    end
-    gem "cucumber", "=1.1.0"
-    gem 'cucumber-rails2', "~> 0.3.5" #FIXME, cant find the sources of Vanuans fork anymore.
-    gem "culerity", "=0.2.15"
-  end
+  #gem 'cucumber-rails', '~>1.4.0', require: false
+  gem 'cucumber-rails', require: false
+  gem "culerity"
+  gem "cucumber"
+  # gem "capybara", "~> 1"
+  #gem "faye-websocket"
+  gem "poltergeist"
   gem "database_cleaner"
-<<<<<<< 528c0066da4ac160b475fd485d34cb25cd3db524
-  if RAILS_VERSION_IS_4
-    gem "gherkin"
-  elsif RAILS_VERSION_IS_3
-    gem "gherkin", "~> 2.6"
-  else
-    gem "gherkin", "~> 2.5.0"
-  end
-  gem "redgreen" if RUBY_VERSION < "1.9"
-  if RAILS_VERSION_IS_4
-    gem "rspec"
-    gem "rspec-rails"
-  elsif RAILS_VERSION_IS_3
-    gem "rspec", '~>2.11.0'
-    gem "rspec-rails", '~> 2.11.0'
-  else
-    gem "rspec", "=1.3.1"
-    gem "rspec-rails", "=1.3.3"
-  end
-  if redmine_version_major >= 3 #redmine 3.0.3 has simplecov
-  elsif RUBY_VERSION >= "1.9"
-    gem "simplecov", "~>0.9.1"
-  else
-    gem "rcov",  "=0.9.11"
-  end
-=======
   gem "gherkin"
   gem "rspec"
   gem "rspec-rails"
->>>>>>> remove unused gems cleanup gemfile
   gem "ruby-prof", :platforms => [:ruby]
   gem "spork"
   gem "test-unit", "=1.2.3"
