@@ -20,15 +20,8 @@ RAILS_VERSION_IS_4 = rails4 =~ deps['rails']
 
 gem "holidays", "~>1.0.3"
 gem "icalendar"
-# Choose nokogiri depending on RM version. This is done to avoid conflict with
-# RM 2.3 which pinned nokogiri at "<1.6.0" for group :test.
-# TODO: drop RM 2.3 support, its a security risk to use that nokogiri
-if (redmine_version_major == 2 && redmine_version_minor == 3)
-  gem "nokogiri", "< 1.6.0"
-else
-gem "nokogiri", "~>1.7.2"
-end
-gem "open-uri-cached", ">= 0.0.5"
+gem "nokogiri", ">= 1.6.7.2"
+gem "open-uri-cached"
 gem "prawn"
 gem 'json'
 
