@@ -104,10 +104,14 @@ class RbMasterBacklogsController < RbApplicationController
 
 
     respond_to do |format|
-      format.html { render :json => links }
+      format.json { render json: links }
     end
   end
 
+  def default_serializer_options
+    { root: false }                           
+  end
+  
   if Rails::VERSION::MAJOR < 3
     def view_context
       @template

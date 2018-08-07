@@ -76,17 +76,26 @@ module Backlogs
       end
 
       module InstanceMethods
-        def move_to_top()
+        def set_position(pos)
+#          self.position = pos
+          write_attribute(:position, pos)
+          pos
+        end
+        def get_position
+          read_attribute(:position)
+        end
+        
+        def move_to_top(options={})
           top = self.class.minimum(:position)
-          return if self.position == top && !top.blank?
-          self.position = top.blank? ? 0 : (top - self.class.list_spacing)
+          return if get_position == top && !top.blank?
+          set_position(top.blank? ? 0 : (top - self.class.list_spacing))
           list_commit
         end
 
         def move_to_bottom()
           bottom = self.class.maximum(:position)
-          return if self.position == bottom && !bottom.blank?
-          self.position = bottom.blank? ? 0 : (bottom + self.class.list_spacing)
+          return if get_position == bottom && !bottom.blank?
+          set_position(bottom.blank? ? 0 : (bottom + self.class.list_spacing))
           list_commit
         end
 
@@ -115,7 +124,7 @@ module Backlogs
         def rank
           @rank ||= self.class.
             backlog_scope(self.list_with_gaps_options).
-            where(["#{self.class.table_name}.position <= ?", self.position]).
+            where(["#{self.class.table_name}.position <= ?", self.get_position]).
             count
         end
         attr_writer :rank
@@ -126,11 +135,11 @@ module Backlogs
           if nxt.blank?
             move_to_bottom
           else
-            if (nxt.position - reference.position) < 2
+            if (nxt.get_position - reference.get_position) < 2
               self.class.connection.execute("update #{self.class.table_name} set position = position + #{self.class.list_spacing} where position >= #{nxt.position}")
-              nxt.position += self.class.list_spacing
+              nxt.set_position(nxt.get_position + self.class.list_spacing)
             end
-            self.position = (nxt.position + reference.position) / 2
+            set_position((nxt.get_position + reference.get_position) / 2)
           end
 
           list_commit
@@ -143,11 +152,11 @@ module Backlogs
           if prev.blank?
             move_to_top
           else
-            if (reference.position - prev.position) < 2
-              self.class.connection.execute("update #{self.class.table_name} set position = position - #{self.class.list_spacing} where position <= #{prev.position}")
-              prev.position -= self.class.list_spacing
+            if (reference.get_position - prev.get_position) < 2
+              self.class.connection.execute("update #{self.class.table_name} set position = position - #{self.class.list_spacing} where position <= #{prev.get_position}")
+              prev.set_position(prev.get_position - self.class.list_spacing)
             end
-            self.position = (reference.position + prev.position) / 2
+            set_position((reference.get_position + prev.get_position) / 2)
           end
 
           list_commit
@@ -167,14 +176,14 @@ module Backlogs
       end
 
       def list_commit
-        self.class.connection.execute("update #{self.class.table_name} set position = #{self.position} where id = #{self.id}") unless self.new_record?
+        self.class.connection.execute("update #{self.class.table_name} set position = #{get_position} where id = #{self.id}") unless self.new_record?
         #FIXME now the cached lower/higher_item are wrong during this request. So are those from our old and new peers.
       end
 
       def list_prev_next(dir, scoped=true)
         return nil if self.new_record?
-        raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless self.position
-        whereclause = ["#{self.class.table_name}.position #{dir == :prev ? '<' : '>'} ?", self.position]
+        raise "#{self.class}##{self.id}: cannot request #{dir} for nil position" unless self.get_position
+        whereclause = ["#{self.class.table_name}.position #{dir == :prev ? '<' : '>'} ?", self.get_position]
         orderclause = "#{self.class.table_name}.position #{dir == :prev ? 'desc' : 'asc'}"
 
         if scoped

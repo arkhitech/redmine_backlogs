@@ -131,10 +131,10 @@ module Backlogs
         end
         self.remaining_hours = self.leaves.sum("COALESCE(remaining_hours, 0)").to_f unless self.leaves.empty?
 
-        self.move_to_top if self.position.blank? || (@copied_from.present? && @copied_from.position == self.position)
+        self.move_to_top if self.get_position.blank? || (@copied_from.present? && @copied_from.get_position == self.get_position)
 
         # scrub position from the journal by copying the new value to the old
-        @attributes_before_change['position'] = self.position if @attributes_before_change
+        @attributes_before_change['position'] = self.get_position if @attributes_before_change
 
         @backlogs_new_record = self.new_record?
 
