@@ -177,12 +177,12 @@ class RbRelease < ActiveRecord::Base
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
- :open, ->{ where(status: 'open') }
+  scope :open, ->{ where(status: 'open') }
   scope :closed, ->{ where(status: 'closed')}
-  scope :visible, lambda {|*args| { 
+  scope :visible, -> (*args) {
   		  eager_load(:project).
   		  where(Project.allowed_to_condition(args.first || User.current, :view_releases)) 
-	} }
+	}
 
 
   include Backlogs::ActiveRecord::Attributes

@@ -20,7 +20,7 @@ def drag_story(story_name, target_sprint_name, before_story_name)
   story = RbStory.find_by_subject(story_name.strip)
   story.should_not be_nil
   @last_drag_and_drop[:version_id_before] = story.fixed_version_id
-  @last_drag_and_drop[:position_before] = story.position
+  @last_drag_and_drop[:position_before] = story.get_position
   element = page.find(:css, "#story_#{story.id}")
 
   sprint_id = target_sprint_name.nil? ? 'product-backlog' : sprint_id_from_name(target_sprint_name.strip)

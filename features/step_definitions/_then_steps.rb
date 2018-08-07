@@ -128,7 +128,7 @@ Then /^(.+) should be the higher item of (.+)$/ do |higher_subject, lower_subjec
   lower.higher_item.should_not be_nil
   higher.lower_item.should_not be_nil
 
-  higher.position.should < lower.position
+  higher.get_position.should < lower.get_position
   lower.higher_item.id.should == higher.id
   higher.lower_item.id.should == lower.id
 end
@@ -443,7 +443,7 @@ end
 Then /^story (.+?) is unchanged$/ do |story_name|
   story = RbStory.find_by_subject(story_name)
   @last_drag_and_drop.should_not be_nil
-  @last_drag_and_drop[:position_before].should == story.position
+  @last_drag_and_drop[:position_before].should == story.get_position
   @last_drag_and_drop[:version_id_before].should == story.fixed_version_id
 end
 

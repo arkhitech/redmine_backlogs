@@ -29,7 +29,7 @@ class RbMasterBacklogsController < RbApplicationController
     label_new = :label_new_story
     add_class = 'add_new_story'
 
-    if @settings[:sharing_enabled]
+    if @settings['sharing_enabled']
       # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
       if @sprint #menu for sprint
         return [] unless @sprint.status == 'open' #closed/locked versions are not assignable versions
@@ -104,10 +104,14 @@ class RbMasterBacklogsController < RbApplicationController
 
 
     respond_to do |format|
-      format.html { render :json => links }
+      format.json { render json: links }
     end
   end
 
+  def default_serializer_options
+    { root: false }                           
+  end
+  
   if Rails::VERSION::MAJOR < 3
     def view_context
       @template

@@ -5,8 +5,6 @@ if (!File.exists? redmine_version_file)
   redmine_version_file = File.expand_path("lib/redmine/version.rb");
 end
 version_file = IO.read(redmine_version_file)
-redmine_version_minor = version_file.match(/MINOR =/).post_match.match(/\d/)[0].to_i
-redmine_version_major = version_file.match(/MAJOR =/).post_match.match(/\d/)[0].to_i
 
 chiliproject_file = File.dirname(__FILE__) + "/lib/chili_project.rb"
 chiliproject = File.file?(chiliproject_file)
@@ -20,7 +18,7 @@ RAILS_VERSION_IS_4 = rails4 =~ deps['rails']
 
 gem "holidays", "~>1.0.3"
 gem "icalendar"
-gem "nokogiri", "~>1.6.8"
+#gem "nokogiri", "~>1.6.8"
 gem "open-uri-cached"
 gem "prawn"
 gem 'json'
