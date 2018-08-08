@@ -29,7 +29,7 @@ class RbMasterBacklogsController < RbApplicationController
     label_new = :label_new_story
     add_class = 'add_new_story'
 
-    if @settings[:sharing_enabled]
+    if @settings['sharing_enabled']
       # FIXME: (pa sharing) usability is bad, menu is inconsistent. Sometimes we have a submenu with one entry, sometimes we have non-sharing behavior without submenu
       if @sprint #menu for sprint
         return [] unless @sprint.status == 'open' #closed/locked versions are not assignable versions
@@ -44,14 +44,14 @@ class RbMasterBacklogsController < RbApplicationController
         if projects.length > 1
           links << {:label => l(label_new), :url => '#', :sub => []}
           projects.each{|project|
-            links.first[:sub] << {:label => project.name, :url => '#', :classname => "#{add_class} project_id_#{project.id}"}
+            links.first[:sub] << {:label => project.name, :url => 'javascript:void(0);', :classname => "#{add_class} project_id_#{project.id}"}
           }
         else
-          links << {:label => l(label_new), :url => '#', :classname => "#{add_class} project_id_#{projects[0].id}"}
+          links << {:label => l(label_new), :url => 'javascript:void(0);', :classname => "#{add_class} project_id_#{projects[0].id}"}
         end
       end
     else #no sharing, only own project in the menu
-      links << {:label => l(label_new), :url => '#', :classname => add_class}
+      links << {:label => l(label_new), :url => 'javascript:void(0);', :classname => add_class}
     end
     return links
   end
@@ -100,14 +100,18 @@ class RbMasterBacklogsController < RbApplicationController
              } if @release
     links << {:label => l(:label_sprint_close),
               :url => url_for(:controller => 'rb_sprints', :action => 'close', :sprint_id => @sprint, :only_path => true)
-              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)        
+              } if @sprint && @sprint.open? && @sprint.stories.open.none? && User.current.allowed_to?(:update_sprints, @project)
 
 
     respond_to do |format|
-      format.html { render :json => links }
+      format.json { render json: links }
     end
   end
 
+  def default_serializer_options
+    { root: false }                           
+  end
+  
   if Rails::VERSION::MAJOR < 3
     def view_context
       @template

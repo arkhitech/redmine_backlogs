@@ -20,7 +20,7 @@ def drag_story(story_name, target_sprint_name, before_story_name)
   story = RbStory.find_by_subject(story_name.strip)
   story.should_not be_nil
   @last_drag_and_drop[:version_id_before] = story.fixed_version_id
-  @last_drag_and_drop[:position_before] = story.position
+  @last_drag_and_drop[:position_before] = story.get_position
   element = page.find(:css, "#story_#{story.id}")
 
   sprint_id = target_sprint_name.nil? ? 'product-backlog' : sprint_id_from_name(target_sprint_name.strip)
@@ -29,7 +29,7 @@ def drag_story(story_name, target_sprint_name, before_story_name)
 
   element.drag_to(target)
   if before_story_name
-    before = RbStory.find(:first, :conditions => {:subject => before_story_name.strip})
+    before = RbStory.where(:subject => before_story_name.strip).first
     before.should_not be_nil
 #jquery DnD is weird. sortable will not work with drag_to. this is known. selenium drag_by might work.
     element.drag_to(page.find(:css, "#story_#{before.id}"))
@@ -51,8 +51,8 @@ def get_taskboard_state_index
 end
 
 def drag_task(task, state, story)
-  task = RbTask.find(:first, :conditions => {:subject => task})
-  story = RbStory.find(:first, :conditions => {:subject => story})
+  task = RbTask.where(:subject => task).first
+  story = RbStory.where(:subject => story).first
   source = page.find(:css, "#taskboard #issue_#{task.id}")
   n = get_taskboard_state_index[state]
   target = page.find(:css, "#taskboard #swimlane-#{story.id} td:nth-child(#{n})")

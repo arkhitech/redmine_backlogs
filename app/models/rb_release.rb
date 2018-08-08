@@ -63,7 +63,7 @@ class ReleaseBurndown
                .order(:day).group(:day).sum(:closed_points)
 
     # Series collected, now format data for jqplot
-    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is 
+    # Slightly hacky formatting to get the correct view. Might change when this jqplot issue is
     # sorted out:
     # See https://bitbucket.org/cleonello/jqplot/issue/181/nagative-values-in-stacked-bar-chart
     @data[:closed_points] = closed.values
@@ -154,7 +154,10 @@ class ReleaseBurndown
 end
 
 class RbRelease < ActiveRecord::Base
+
   self.table_name = 'releases'
+
+  attr_protected :created_at # hack, all attributes will be mass asigment
 
   RELEASE_STATUSES = %w(open closed)
   RELEASE_SHARINGS = %w(none descendants hierarchy tree system)
@@ -165,16 +168,21 @@ class RbRelease < ActiveRecord::Base
   has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify
   has_many :rb_release_burnchart_day_cache, :dependent => :delete_all, :foreign_key => 'release_id'
 
+  attr_accessible :project_id, :name, :release_start_date, :release_end_date, :status
+  attr_accessible :project, :description, :planned_velocity, :sharing
+
   validates_presence_of :project_id, :name, :release_start_date, :release_end_date
   validates_inclusion_of :status, :in => RELEASE_STATUSES
   validates_inclusion_of :sharing, :in => RELEASE_SHARINGS
   validates_length_of :name, :maximum => 64
   validate :dates_valid?
 
-  scope :open, :conditions => {:status => 'open'}
-  scope :closed, :conditions => {:status => 'closed'}
-  scope :visible, lambda {|*args| { :include => :project,
-                                    :conditions => Project.allowed_to_condition(args.first || User.current, :view_releases) } }
+  scope :open, ->{ where(status: 'open') }
+  scope :closed, ->{ where(status: 'closed')}
+  scope :visible, -> (*args) {
+  		  eager_load(:project).
+  		  where(Project.allowed_to_condition(args.first || User.current, :view_releases)) 
+	}
 
 
   include Backlogs::ActiveRecord::Attributes
@@ -195,7 +203,7 @@ class RbRelease < ActiveRecord::Base
 
   # Returns current stories + stories previously scheduled for this release
   def stories_all_time
-    RbStory.includes(:journals => :details).where(
+    RbStory.joins(:journals => :details).includes(:journals => :details).where(
             "(release_id = ?) OR (
             journal_details.property ='attr' and
             journal_details.prop_key = 'release_id' and
@@ -249,7 +257,8 @@ class RbRelease < ActiveRecord::Base
   end
 
   def has_burndown?
-    return self.stories.size > 0
+    false #FIXME release burndown broken
+    #return self.stories.size > 0
   end
 
   def burndown
@@ -268,7 +277,7 @@ class RbRelease < ActiveRecord::Base
   end
 
   def today
-    ReleaseBurndownDay.find(:first, :conditions => { :release_id => self, :day => Date.today })
+    ReleaseBurndownDay.where(release_id: self, day: Date.today).first
   end
 
   def remaining_story_points #FIXME merge bohansen_release_chart removed this
@@ -304,14 +313,15 @@ class RbRelease < ActiveRecord::Base
         r = self.project.root? ? self.project : self.project.root
         # Project used for other sharings
         p = self.project
-        Project.visible.scoped(:include => :releases,
-          :conditions => ["#{RbRelease.table_name}.id = #{id}" +
+        Project.visible.joins('LEFT OUTER JOIN releases ON releases.project_id = projects.id').
+        includes(:releases).
+          where("#{RbRelease.table_name}.id = #{id}" +
           " OR (#{Project.table_name}.status <> #{Project::STATUS_ARCHIVED} AND (" +
           " 'system' = ? " +
           " OR (#{Project.table_name}.lft >= #{r.lft} AND #{Project.table_name}.rgt <= #{r.rgt} AND ? = 'tree')" +
           " OR (#{Project.table_name}.lft > #{p.lft} AND #{Project.table_name}.rgt < #{p.rgt} AND ? IN ('hierarchy', 'descendants'))" +
           " OR (#{Project.table_name}.lft < #{p.lft} AND #{Project.table_name}.rgt > #{p.rgt} AND ? = 'hierarchy')" +
-          "))",sharing,sharing,sharing,sharing]).order('lft')
+          "))",sharing,sharing,sharing,sharing).order('lft').distinct
       end
     @shared_projects
   end
