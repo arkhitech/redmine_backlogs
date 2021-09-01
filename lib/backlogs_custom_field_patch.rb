@@ -7,7 +7,12 @@ module Backlogs
       base.send(:include, InstanceMethods)
       base.class_eval do
         class << self
-          alias_method_chain :customized_class, :sti
+          # alias_method_chain :customized_class, :sti
+          %w[customized_class].each do |method_name|
+            alias_method "#{method_name}_without_sti", method_name
+            alias_method method_name, "#{method_name}_with_sti"
+          end
+        
         end
       end
     end

@@ -13,7 +13,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class RbStats < ActiveRecord::Base
-  attr_protected :created_at # hack, all attributes will be mass asigment
+  # attr_protected :created_at # hack, all attributes will be mass asigment
   REDMINE_PROPERTIES = ['estimated_hours', 'fixed_version_id', 'status_id', 'story_points', 'remaining_hours']
   JOURNALED_PROPERTIES = {
     'estimated_hours'   => :float,
@@ -84,7 +84,7 @@ class RbStats < ActiveRecord::Base
   end
 
   def self.rebuild(issue)
-    RbJournal.delete_all(:issue_id => issue.id)
+    RbJournal.where(:issue_id => issue.id).delete_all
 
     changes = {}
     RbJournal::REDMINE_PROPERTIES.each{|prop| changes[prop] = [] }

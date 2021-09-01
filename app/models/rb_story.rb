@@ -172,10 +172,11 @@ class RbStory < Issue
     params['prev'] = nil if (['next', 'prev'] - params.keys).size == 2
 
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
-
+    except = %w[prev next id lft rigt authenticity_token action controller _method] - RbStory.column_names
+    # attribs = params.select{|k,v| !['prev', 'next', 'id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    # attribs = Hash[*attribs.flatten]
+    attribs = params.except(*except).permit!.to_h
     attribs[:status] = RbStory.class_default_status
-    attribs = Hash[*attribs.flatten]
     s = RbStory.new(attribs)
     s.save!
     s.position!(params)
@@ -261,10 +262,11 @@ class RbStory < Issue
     params['next'] = params.delete('next_id') if params.include?('next_id')
     self.position!(params)
 
+    except = %w[prev next id project_id lft rigt authenticity_token action controller _method] - RbStory.column_names
     # lft and rgt fields are handled by acts_as_nested_set
-    attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
-    attribs = Hash[*attribs.flatten]
-
+    # attribs = params.select{|k,v| !['prev', 'id', 'project_id', 'lft', 'rgt'].include?(k) && RbStory.column_names.include?(k) }
+    # attribs = Hash[*attribs.flatten]
+    attribs = params.except(*except).permit!.to_h
     return self.journalized_update_attributes attribs
   end
 
@@ -291,11 +293,11 @@ class RbStory < Issue
   end
 
   def save_release_burnchart_data(series,release_burndown_id)
-    RbReleaseBurnchartDayCache.delete_all(
+    RbReleaseBurnchartDayCache.where(
       ["issue_id = ? AND release_id = ? AND day IN (?)",
        self.id,
        release_burndown_id,
-       series.series(:day)])
+       series.series(:day)]).delete_all
 
     series.each{|s|
       RbReleaseBurnchartDayCache.create(:issue_id => self.id,

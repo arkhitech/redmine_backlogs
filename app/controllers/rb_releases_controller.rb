@@ -47,15 +47,16 @@ class RbReleasesController < RbApplicationController
   end
 
   def update
-    except = ['id', 'project_id']
-    attribs = params.select{|k,v| (!except.include? k) and (RbRelease.column_names.include? k) }
-    attribs = Hash[*attribs.flatten]
+    except = ['id', 'project_id', 'authenticity_token', 'action', 'controller', '_method'] - RbRelease.column_names
+    # attribs = params.select{|k,v| (!except.include? k) and (RbRelease.column_names.include? k) }
+    # attribs = Hash[*attribs.flatten]
+    attribs = params.except(*except).permit!.to_h
     begin
       result  = @release.update_attributes attribs
     rescue => e
       Rails.logger.debug e
       Rails.logger.debug e.backtrace.join("\n")
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render plain: e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 

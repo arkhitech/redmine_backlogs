@@ -7,13 +7,14 @@ module RbPartialsHelper
 
     def def_erb_method(method_name_and_args, filename)
       erb_data = File.read(filename)
-      eruby = Erubis::FastEruby.new(erb_data)
+      eruby = ERB.new(erb_data)
       eruby.def_method(self, method_name_and_args)
       method_name = method_name_and_args[/^[^(]+/].strip.to_sym
       define_method "#{method_name}_with_html_safe" do |*args, &block|
         send("#{method_name}_without_html_safe", *args, &block).html_safe
       end
-      alias_method_chain method_name, :html_safe
+      alias_method "#{method_name}_without_html_safe", method_name
+      alias_method method_name, "#{method_name}_with_html_safe"
       method_name
     end
 

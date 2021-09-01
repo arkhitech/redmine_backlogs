@@ -8,9 +8,9 @@ redmine_version_major = version_file.match(/MAJOR =/).post_match.match(/\d/)[0].
 
 gem "holidays", "~>1.0.3"
 gem "icalendar"
-gem "nokogiri", "~>1.6.8"
+#gem "nokogiri", "~>1.6.8"
 gem "open-uri-cached"
-gem "prawn"
+#gem "prawn"
 gem 'json'
 
 group :development do
@@ -40,3 +40,5 @@ end
 # moved out of the dev group so backlogs can be tested by the user after install. Too many issues of weird setups with apache, nginx, etc.
 # thin doesn't work for jruby
 gem "thin", :platforms => [:ruby]
+gem 'octokit', require: false
+gem 'inifile', require: false

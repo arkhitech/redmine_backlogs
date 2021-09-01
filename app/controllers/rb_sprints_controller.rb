@@ -11,8 +11,10 @@ class RbSprintsController < RbApplicationController
   accept_api_auth :download
 
   def create
-    attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
-    attribs = Hash[*attribs.flatten]
+    except = %w[id authenticity_token action controller _method] - RbSprint.column_names
+    # attribs = params.select{|k,v| k != 'id' and RbSprint.column_names.include? k }
+    # attribs = Hash[*attribs.flatten]
+    attribs = params.except(*except).permit!.to_h
     @sprint = RbSprint.new(attribs)
 
     #share the sprint according to the global setting
@@ -28,7 +30,7 @@ class RbSprintsController < RbApplicationController
     rescue => e
       Rails.logger.debug e
       Rails.logger.debug e.backtrace.join("\n")
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render plain: e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
@@ -41,15 +43,16 @@ class RbSprintsController < RbApplicationController
   end
 
   def update
-    except = ['id', 'project_id']
-    attribs = params.select{|k,v| (!except.include? k) and (RbSprint.column_names.include? k) }
-    attribs = Hash[*attribs.flatten]
+    except = %w[id project_id authenticity_token action controller _method] - RbSprint.column_names
+    # attribs = params.select{|k,v| (!except.include? k) and (RbSprint.column_names.include? k) }
+    # attribs = Hash[*attribs.flatten]
+    attribs = params.except(*except).permit!.to_h
     begin
       result  = @sprint.update_attributes attribs
     rescue => e
       Rails.logger.debug e
       Rails.logger.debug e.backtrace.join("\n")
-      render :text => e.message.blank? ? e.to_s : e.message, :status => 400
+      render plain: e.message.blank? ? e.to_s : e.message, :status => 400
       return
     end
 
@@ -87,7 +90,7 @@ class RbSprintsController < RbApplicationController
 
   def reset
     unless @sprint.sprint_start_date
-      render :text => 'Sprint without start date cannot be reset', :status => 400
+      render plain: 'Sprint without start date cannot be reset', :status => 400
       return
     end
 

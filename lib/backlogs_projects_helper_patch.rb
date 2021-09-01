@@ -7,7 +7,10 @@ module Backlogs
       base.send(:include, InstanceMethods)
       base.class_eval do
         unloadable
-        alias_method_chain :project_settings_tabs, :backlogs
+        %w[project_settings_tabs].each do |method_name|
+          alias_method "#{method_name}_without_backlogs", method_name
+          alias_method method_name, "#{method_name}_with_backlogs"
+        end
       end
     end
 
