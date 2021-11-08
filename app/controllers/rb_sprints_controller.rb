@@ -43,7 +43,7 @@ class RbSprintsController < RbApplicationController
   end
 
   def update
-    except = %w[id project_id authenticity_token action controller _method] - RbSprint.column_names
+    except = %w[id project_id authenticity_token action controller _method sprint_id] - RbSprint.column_names
     # attribs = params.select{|k,v| (!except.include? k) and (RbSprint.column_names.include? k) }
     # attribs = Hash[*attribs.flatten]
     attribs = params.except(*except).permit!.to_h
