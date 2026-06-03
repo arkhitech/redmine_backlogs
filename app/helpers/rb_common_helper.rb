@@ -1,8 +1,7 @@
-require 'color'
+require_relative '../../lib/color'
 require 'nokogiri'
 
 module RbCommonHelper
-  unloadable
 
   include CustomFieldsHelper
   include RbPartialsHelper
@@ -49,13 +48,13 @@ filter:progid:DXImageTransform.Microsoft.Gradient(Enabled=1,GradientType=0,Start
   def issue_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => "issues", :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, {:controller => "issues", :action => "show", id: item}, {:target => "_blank", class: "prevent_edit"})
   end
 
   def sprint_link_or_empty(item)
     item_id = item.id.to_s
     text = (item_id.length > 8 ? "#{item_id[0..1]}...#{item_id[-4..-1]}" : item_id)
-    item.new_record? ? "" : link_to(text, {:controller => 'versions', :action => "show", :id => item}, {:target => "_blank", :class => "prevent_edit"})
+    item.new_record? ? "" : link_to(text, {controller: 'versions', :action => "show", id: item}, {:target => "_blank", class: "prevent_edit"})
   end
 
   def release_display_name(release)

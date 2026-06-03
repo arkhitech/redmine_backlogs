@@ -1,5 +1,4 @@
 module RbPartialsHelper
-  unloadable
 
   PLUGIN_VIEWS_PATH = File.expand_path('../../views', __FILE__)
 

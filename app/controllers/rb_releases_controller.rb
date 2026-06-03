@@ -4,7 +4,6 @@ include ProjectsHelper
 
 # Responsible for exposing release CRUD.
 class RbReleasesController < RbApplicationController
-  unloadable
 
   def index
     @releases_open = @project.open_releases_by_date
@@ -31,7 +30,7 @@ class RbReleasesController < RbApplicationController
     @release.project = @project
     if @release.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index', :project_id => @project
+      redirect_to action: 'index', project_id: @project
     else
       render action: :new
     end
@@ -40,7 +39,7 @@ class RbReleasesController < RbApplicationController
   def edit
     if request.post? and @release.update_attributes(release_params)
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :controller => 'rb_releases', :action => 'show', :release_id => @release
+      redirect_to controller: 'rb_releases', action: 'show', :release_id => @release
 #    else
 #      flash[:notice] = l(:notice_unsuccessful_update)
     end
@@ -67,7 +66,7 @@ class RbReleasesController < RbApplicationController
 
   def destroy
     @release.destroy
-    redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+    redirect_to controller: 'rb_releases', action: 'index', project_id: @project
   end
 
   private

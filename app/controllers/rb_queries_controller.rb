@@ -1,5 +1,4 @@
 class RbQueriesController < RbApplicationController
-  unloadable
 
   def show
     @query = __IssueQueryClass.new(:name => "_")
@@ -26,7 +25,7 @@ class RbQueriesController < RbApplicationController
     column_names = column_names + ['position'] unless column_names.include?('position')
 
     session[:query] = {:project_id => @query.project_id, :filters => @query.filters, :column_names => column_names, :group_by => group_by}
-    redirect_to :controller => 'issues', :action => 'index', :project_id => @project.id, :sort => 'position'
+    redirect_to controller: 'issues', action: 'index', project_id: @project.id, :sort => 'position'
   end
 
   def impediments
@@ -36,7 +35,7 @@ class RbQueriesController < RbApplicationController
     @query.add_filter("fixed_version_id", '=', [params[:sprint_id]])
     @query.add_filter("backlogs_issue_type", '=', ['impediment'])
     session[:query] = {:project_id => @query.project_id, :filters => @query.filters }
-    redirect_to :controller => 'issues', :action => 'index', :project_id => @project.id
+    redirect_to controller: 'issues', action: 'index', project_id: @project.id
   end
 
   private

@@ -48,10 +48,10 @@ Given /^I am logged out$/ do
 end
 
 Given /^I am viewing the master backlog$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project.identifier, :only_path=>true)
+  visit url_for(:controller => :projects, :action => :show, id: @project.identifier, :only_path=>true)
   verify_request_status(200)
   click_link("Backlogs")
-  page.current_path.should == url_for(:controller => :rb_master_backlogs, :action => :show, :project_id => @project.identifier, :only_path=>true)
+  page.current_path.should == url_for(:controller => :rb_master_backlogs, :action => :show, project_id: @project.identifier, :only_path=>true)
   verify_request_status(200)
 end
 
@@ -87,7 +87,7 @@ Given /^I am viewing the taskboard for (.+)$/ do |sprint_name|
 end
 
 Given /^I am viewing the backlog settings page for project (.*)$/ do |project_name|
-  visit url_for(:controller => :projects, :action => :settings, :id => Project.find(project_name).id, :tab => 'backlogs', :only_path=>true)
+  visit url_for(:controller => :projects, :action => :settings, id: Project.find(project_name).id, :tab => 'backlogs', :only_path=>true)
   verify_request_status(200)
 end
 
@@ -452,19 +452,19 @@ Given /^I have defined the following impediments:$/ do |table|
 end
 
 Given /^I am viewing the issues list$/ do
-  visit url_for(:controller => 'issues', :action=>'index', :project_id => @project, :only_path=>true)
+  visit url_for(controller: 'issues', :action=>'index', project_id: @project, :only_path=>true)
   verify_request_status(200)
 end
 
 Given /^I am viewing the issues sidebar$/ do
-  visit url_for(:controller => 'rb_hooks_render', :action=>'view_issues_sidebar', :project_id => @project, :only_path=>true)
+  visit url_for(controller: 'rb_hooks_render', :action=>'view_issues_sidebar', project_id: @project, :only_path=>true)
   verify_request_status(200)
 end
 
 Given /^I am viewing the issues sidebar for (.+)$/ do |name|
-  visit url_for(:controller => 'rb_hooks_render',
+  visit url_for(controller: 'rb_hooks_render',
                 :action=>'view_issues_sidebar',
-                :project_id => @project,
+                project_id: @project,
                 :sprint_id => RbSprint.find_by_name(name).id,
                 :only_path => true)
   verify_request_status(200)
@@ -472,7 +472,7 @@ end
 
 Given /^I am viewing the issue named "([^\"]*)"$/ do |name|
   issue = Issue.find_by_subject(name)
-  visit url_for(:controller => 'issues', :action=>'show', :id => issue.id, :project_id => @project, :only_path=>true)
+  visit url_for(controller: 'issues', :action=>'show', id: issue.id, project_id: @project, :only_path=>true)
   verify_request_status(200)
 end
 
@@ -646,7 +646,7 @@ end
 
 
 Given /^I view the release page$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
+  visit url_for(:controller => :projects, :action => :show, id: @project, :only_path => true)
   click_link("Releases")
 end
 

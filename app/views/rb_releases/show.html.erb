@@ -2,7 +2,7 @@
 <%- controller.rb_jquery_plugins = capture do %>
   <%= javascript_include_tag(
     'jquery/jquery.jqplot/plugins/jqplot.barRenderer.min.js',
-    :plugin => 'redmine_backlogs')
+    plugin: 'redmine_backlogs')
   %>
 <%- end %>
 
@@ -13,8 +13,8 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 #sprints, #releasebacklog, #closed-sprints {margin-bottom: 3em;}
 </style>
 <div class="contextual">
-<%= link_to_if_authorized l(:button_edit),   {:controller => 'rb_releases', :action => 'edit',    :release_id => @release}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) %>
-<%= link_to_if_authorized l(:button_delete), {:controller => 'rb_releases', :action => 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), :class => 'icon icon-del', :method => :delete %>
+<%= link_to_if_authorized l(:button_edit),   {controller: 'rb_releases', action: 'edit',    :release_id => @release}, class: 'icon icon-edit', :accesskey => accesskey(:edit) %>
+<%= link_to_if_authorized l(:button_delete), {controller: 'rb_releases', action: 'destroy', :release_id => @release}, :confirm => l(:text_are_you_sure), class: 'icon icon-del', :method => :delete %>
 </div>
 
 <h2><%= h @release.name %></h2>
@@ -62,7 +62,7 @@ h3.version {font-size: 14px; background: none; padding-left:0;}
 
 <% if @release.has_burndown? && Backlogs.setting[:release_burnup_enabled] %>
   <% other_formats_links do |f| %>
-    <%= f.link_to 'CSV', :url => { :release_id => @release } %>
+    <%= f.link_to 'CSV', url: { :release_id => @release } %>
   <% end %>
 <% end %>
   <br />

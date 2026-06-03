@@ -38,8 +38,8 @@
           },
         },
         :legend => { :show => true, :location => 'se' },
-        :series => names.collect{|n| { :label => n } } +
-                   estimate_names.collect{|n| { :label => n,
+        :series => names.collect{|n| { label: n } } +
+                   estimate_names.collect{|n| { label: n,
                                                 :linePattern => "dotted",
                                                 :showMarker => false } }
 

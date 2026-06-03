@@ -28,7 +28,7 @@ A Sprint day in your time zone <%= zone %> is from <%= t1.strftime("%T") %> to <
           :series => series.collect{|s|
             axis = s.to_s.split('_')[0]
             {
-              :label => l("label_#{s}"),
+              label: l("label_#{s}"),
               :yaxis => {'hours' => 'yaxis', 'points' => 'y2axis', 'ideal' => 'y3axis'}[axis],
               :showHighlight => (axis != 'ideal'),
               :markerOptions => {:style => {'hours' => 'filledSquare', 'points' => 'filledCircle', 'ideal' => 'filledDiamond'}[axis]}
@@ -45,8 +45,8 @@ A Sprint day in your time zone <%= zone %> is from <%= t1.strftime("%T") %> to <
                 :ticks => ticks,
                 :tickOptions => {:angle => -90, :fontSize => '8pt'}
               },
-              :yaxis => {:label => l("label_hours"), :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}},
-              :y2axis => {:label => l("label_points"), :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}},
+              :yaxis => {label: l("label_hours"), :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}},
+              :y2axis => {label: l("label_points"), :min => 0, :autoscale => true, :tickOptions => {:formatString => '%d'}},
               :y3axis => {:min => 0, :autoscale => true, :showTicks => false, :showTickMarks => false, :tickOptions => {:showGridline => false, :show => false}}
           },
           :highlighter => { :bringSeriesToFront => true, :tooltipAxes => 'y', :formatString => '%s', :show => true }

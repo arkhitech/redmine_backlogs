@@ -1,6 +1,5 @@
 # Base class of all controllers in Redmine Backlogs
 class RbApplicationController < ApplicationController
-  unloadable
 
   before_action :load_project, :authorize, :check_if_plugin_is_configured
 

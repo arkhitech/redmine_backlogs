@@ -3,22 +3,22 @@
 <%- controller.rb_jquery_plugins = capture do %>
   <%= javascript_include_tag(
     'jquery/jquery.multiselect.js', 'jquery/jquery.qtip.pack.js', 'jquery/jquery.qtip.setup.js',
-     :plugin => 'redmine_backlogs')
+     plugin: 'redmine_backlogs')
   %>
 <%- end %>
 <% content_for :head_tags do %>
   <%= javascript_include_tag(
     'show_main', 'board_updater', 'taskboard_updater', 'taskboard', 'model', 'issue', 'task', 'impediment',
-     :plugin => 'redmine_backlogs')
+     plugin: 'redmine_backlogs')
   %>
-  <%= stylesheet_link_tag 'jquery/jquery.qtip.css', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', :plugin => 'redmine_backlogs' %>
-  <%= stylesheet_link_tag 'taskboard.css', :plugin => 'redmine_backlogs', :media => 'print,screen' %>
-  <%= stylesheet_link_tag 'taskboard_print.css', :plugin => 'redmine_backlogs', :media => 'print' %>
+  <%= stylesheet_link_tag 'jquery/jquery.qtip.css', plugin: 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'jquery/jquery.multiselect.css', plugin: 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'taskboard.css', plugin: 'redmine_backlogs', :media => 'print,screen' %>
+  <%= stylesheet_link_tag 'taskboard_print.css', plugin: 'redmine_backlogs', :media => 'print' %>
 
   <script type="text/javascript"
-          src="<%= url_for(:controller => 'rb_server_variables',
-                           :action => 'sprint', :sprint_id => @sprint.id,
+          src="<%= url_for(controller: 'rb_server_variables',
+                           action: 'sprint', :sprint_id => @sprint.id,
                            :context => 'taskboard',
                            :format => 'js') %>">
   </script>
@@ -32,7 +32,7 @@
 
 <% content_for :breadcrumbs do %>
   <% unless Backlogs.setting[:show_redmine_std_header] %>
-    <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", :project_id => @project %>
+    <%= link_to l(:label_master_backlog), :controller => "rb_master_backlogs", :action => "show", project_id: @project %>
     <%= breadcrumb_separator %>
   <% end %>
   <%= h @sprint.name %>
@@ -107,7 +107,7 @@
         <div class="story <%= mark_if_closed(story) %>" <%= build_inline_style(story).html_safe %>>
           <div class="id story_tooltip_ajax">
             <div class="tooltip_text"></div>
-            <%= link_to story.id, {:controller => 'issues', :action => 'show', :id => story.id}, { :target => "_blank" } %>
+            <%= link_to story.id, {controller: 'issues', action: 'show', id: story.id}, { :target => "_blank" } %>
             <div class="v"><%= story.id %></div>
             <% if User.current.allowed_to?(:create_tasks, @project) %>
             <span class="add_new">

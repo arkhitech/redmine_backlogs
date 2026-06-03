@@ -172,7 +172,6 @@ module Backlogs
       base.send(:include, InstanceMethods)
 
       base.class_eval do
-        unloadable
         has_many :releases, -> { order "#{RbRelease.table_name}.release_start_date DESC, #{RbRelease.table_name}.name DESC" }, :class_name => 'RbRelease', :inverse_of => :project, :dependent => :destroy
         has_many :releases_multiview, :class_name => 'RbReleaseMultiview', :dependent => :destroy
         include Backlogs::ActiveRecord::Attributes
@@ -322,11 +321,11 @@ private
       def _sql_for_aggregate_list(field_name)
         adapter_name = self.class.connection.adapter_name.downcase
         aggregate_list = ""
-        if adapter_name.starts_with? 'mysql'
+        if adapter_name.start_with? 'mysql'
           aggregate_list = " GROUP_CONCAT(#{field_name} SEPARATOR ',') as list "
-        elsif adapter_name.starts_with? 'postgresql'
+        elsif adapter_name.start_with? 'postgresql'
           aggregate_list = " array_to_string(array_agg(#{field_name}),',') as list "
-        elsif adapter_name.starts_with? 'sqlite'
+        elsif adapter_name.start_with? 'sqlite'
           aggregate_list = " GROUP_CONCAT(#{field_name}) as list "
         else
           raise NotImplementedError, "Unknown adapter '#{adapter_name}'"

@@ -1,5 +1,5 @@
 <%- content_for :header_tags do %>
-  <%= stylesheet_link_tag 'statistics', :plugin => 'redmine_backlogs' %>
+  <%= stylesheet_link_tag 'statistics', plugin: 'redmine_backlogs' %>
 <%- end %>
 
 <script>
@@ -34,19 +34,19 @@
         <%= l(:label_sprint_velocity, stats) %><br/>
       <% end %>
       <h4><%= l(:backlogs_product_backlog) %></h4>
-      <%= link_to(l(:backlogs_product_backlog), { :controller => 'rb_queries', :action => 'show', :project_id => project }) %><br/>
+      <%= link_to(l(:backlogs_product_backlog), { controller: 'rb_queries', action: 'show', :project_id => project }) %><br/>
       <% if active_sprint || past_sprints.size > 0 %>
         <h4><%= l(:backlogs_sprints) %></h4>
         <% if active_sprint %>
           <%= link_to(active_sprint.name, {
-            :controller => 'rb_queries',
-            :action => 'show',
+            controller: 'rb_queries',
+            action: 'show',
             :project_id => project,
             :sprint_id => active_sprint.id }) %> (<%= l(:backlogs_active) %>)<br/>
         <% end %>
         <% if past_sprints.size > 0 %>
           <% past_sprints.each do |sprint| %>
-            <%= link_to(sprint.name, { :controller => 'rb_queries', :action => 'show', :project_id => project, :sprint_id => sprint.id }) %><br/>
+            <%= link_to(sprint.name, { controller: 'rb_queries', action: 'show', :project_id => project, :sprint_id => sprint.id }) %><br/>
           <% end %>
         <% end %>
       <% end %>

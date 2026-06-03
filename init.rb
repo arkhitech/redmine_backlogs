@@ -1,51 +1,63 @@
 require 'redmine'
 
+# The plugin's lib/ files don't follow Zeitwerk naming conventions.
+# They are explicitly required below. Ignore them from autoloading.
+Rails.autoloaders.main.ignore(File.join(__dir__, 'lib'))
+
+# Ensure Backlogs module is defined before app files reference it during eager load
+require_relative 'lib/backlogs'
+
+# --- one-time initialisation (must not be repeated) ---
+if Issue.const_defined? "SAFE_ATTRIBUTES"
+  Issue::SAFE_ATTRIBUTES << "story_points"
+  Issue::SAFE_ATTRIBUTES << "position"
+  Issue::SAFE_ATTRIBUTES << "remaining_hours"
+else
+  Issue.safe_attributes "story_points", "position", "remaining_hours"
+end
+
+Redmine::AccessControl.permission(:manage_versions).actions << "rb_sprints/close_completed"
+
+# --- patch loader: run now for production, and again in to_prepare for dev reloads ---
+def load_backlogs_patches
+  load File.join(__dir__, 'lib/backlogs_redmine3nestedset_mixin.rb')
+  load File.join(__dir__, 'lib/backlogs_activerecord_mixin.rb')
+  load File.join(__dir__, 'lib/backlogs_setup.rb')
+
+  if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
+    load File.join(__dir__, 'lib/backlogs_time_report_patch.rb')
+  end
+  load File.join(__dir__, 'lib/backlogs_issue_query_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_issue_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_issue_status_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_tracker_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_version_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_project_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_user_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_custom_field_patch.rb')
+
+  load File.join(__dir__, 'lib/backlogs_my_controller_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_issues_controller_patch.rb')
+  load File.join(__dir__, 'lib/backlogs_projects_helper_patch.rb')
+
+  load File.join(__dir__, 'lib/backlogs_hooks.rb')
+
+  load File.join(__dir__, 'lib/backlogs_merged_array.rb')
+
+  load File.join(__dir__, 'lib/backlogs_printable_cards.rb')
+  load File.join(__dir__, 'lib/linear_regression.rb')
+end
+
+load_backlogs_patches
+
 if Rails::VERSION::MAJOR < 3
   require 'dispatcher'
   object_to_prepare = Dispatcher
 else
   object_to_prepare = Rails.configuration
-  # if redmine plugins were railties:
-  # object_to_prepare = config
 end
 object_to_prepare.to_prepare do
-  require_dependency 'backlogs_redmine3nestedset_mixin'
-  require_dependency 'backlogs_activerecord_mixin'
-  require_dependency 'backlogs_setup'
-  require_dependency 'issue'
-
-  if Issue.const_defined? "SAFE_ATTRIBUTES"
-    Issue::SAFE_ATTRIBUTES << "story_points"
-    Issue::SAFE_ATTRIBUTES << "position"
-    Issue::SAFE_ATTRIBUTES << "remaining_hours"
-  else
-    Issue.safe_attributes "story_points", "position", "remaining_hours"
-  end
-
-  if (Redmine::VERSION::MAJOR > 2) || (Redmine::VERSION::MAJOR == 2 && Redmine::VERSION::MINOR >= 3)
-    require_dependency 'backlogs_time_report_patch'
-  end
-  require_dependency 'backlogs_issue_query_patch'
-  require_dependency 'backlogs_issue_patch'
-  require_dependency 'backlogs_issue_status_patch'
-  require_dependency 'backlogs_tracker_patch'
-  require_dependency 'backlogs_version_patch'
-  require_dependency 'backlogs_project_patch'
-  require_dependency 'backlogs_user_patch'
-  require_dependency 'backlogs_custom_field_patch'
-
-  require_dependency 'backlogs_my_controller_patch'
-  require_dependency 'backlogs_issues_controller_patch'
-  require_dependency 'backlogs_projects_helper_patch'
-
-  require_dependency 'backlogs_hooks'
-
-  require_dependency 'backlogs_merged_array'
-
-  require_dependency 'backlogs_printable_cards'
-  require_dependency 'linear_regression'
-
-  Redmine::AccessControl.permission(:manage_versions).actions << "rb_sprints/close_completed"
+  load_backlogs_patches
 end
 
 

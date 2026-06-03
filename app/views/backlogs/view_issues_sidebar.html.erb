@@ -2,8 +2,8 @@
   <h3><%= l(:backlogs_sprints) %></h3>
   <% sprints.each do |sp| %>
     <%= link_to(sp.name, {
-        :controller => 'rb_queries',
-        :action => 'show',
+        controller: 'rb_queries',
+        action: 'show',
         :sprint_id => sp.id
         }) %><br/>
   <% end %>
@@ -12,14 +12,14 @@
 <% if project %>
   <h3><%= h project.name %></h3>
   <%= link_to(l(:backlogs_product_backlog), {
-      :controller => 'rb_queries',
-      :action => 'show',
+      controller: 'rb_queries',
+      action: 'show',
       :project_id => project.id
       }) %><br/>
   <% if BacklogsPrintableCards::CardPageLayout.selected %>
   <%= link_to(l(:label_product_cards), {
-      :controller => 'rb_stories',
-      :action => 'index',
+      controller: 'rb_stories',
+      action: 'index',
       :project_id => project.id,
       :format => 'pdf'
       }) %><br/>
@@ -40,8 +40,8 @@
     <h3><%= l(:label_release_plural) %></h3>
     <% project.shared_releases.each{|r| %>
       <%= link_to(r, {
-        :controller => 'rb_queries',
-        :action => 'show',
+        controller: 'rb_queries',
+        action: 'show',
         :release_id => r.id
       })
        %><br/>
@@ -52,16 +52,16 @@
 <% if sprint %>
   <h3><%= l(:label_sprint_name, {:name => sprint.name}) %></h3>
   <%= link_to(l(:label_task_board), {
-      :controller => 'rb_taskboards',
-      :action => 'show',
+      controller: 'rb_taskboards',
+      action: 'show',
       :sprint_id => sprint.id
       })
   %><br/>
 
   <% if sprint.has_burndown? %>
   <%= link_to(l(:label_burndown), {
-      :controller => 'rb_burndown_charts',
-      :action => 'show',
+      controller: 'rb_burndown_charts',
+      action: 'show',
       :sprint_id => sprint.id
       })
   %><br/>
@@ -69,8 +69,8 @@
 
   <% if BacklogsPrintableCards::CardPageLayout.selected %>
     <%= link_to(l(:label_sprint_cards), {
-        :controller => 'rb_stories',
-        :action => 'index',
+        controller: 'rb_stories',
+        action: 'index',
         :sprint_id => sprint.id,
         :format => 'pdf'
         })
@@ -78,15 +78,15 @@
   <% end %>
   <% if project.enabled_modules.any? {|m| m.name=="wiki"} %>
     <%= link_to(l(:label_wiki), {
-        :controller => 'rb_wikis',
-        :action => 'show',
+        controller: 'rb_wikis',
+        action: 'show',
         :sprint_id => sprint.id
         })
     %><br/>
   <% end %>
   <%= link_to(l(:label_impediments), {
-      :controller => 'rb_queries',
-      :action => 'impediments',
+      controller: 'rb_queries',
+      action: 'impediments',
       :sprint_id => sprint.id
       }) %><br/>
   <% if sprint.has_burndown? && Backlogs.setting[:show_burndown_in_sidebar] == 'enabled' %>

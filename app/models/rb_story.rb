@@ -1,5 +1,4 @@
 class RbStory < Issue
-  unloadable
 
   RELEASE_RELATIONSHIP = %w(auto initial continued added)
 
@@ -214,7 +213,7 @@ class RbStory < Issue
       trackers = [] if trackers.blank?
     end
 
-    trackers = Tracker.where(:id => trackers).all
+    trackers = Tracker.where(id: trackers).all
     trackers = trackers & options[:project].trackers if options[:project]
     trackers = trackers.sort_by { |t| [t.position] }
 

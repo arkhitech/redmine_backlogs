@@ -1,7 +1,6 @@
 include RbCommonHelper
 
 class RbHooksRenderController < RbApplicationController
-  unloadable
 
   def view_issues_sidebar
     locals = {
@@ -9,7 +8,7 @@ class RbHooksRenderController < RbApplicationController
       :project => @project,
       :sprint => @sprint,
       :webcal => (request.ssl? ? 'webcals' : 'webcal'),
-      :key => User.current.api_key
+      key: User.current.api_key
     }
 
     respond_to do |format|

@@ -202,7 +202,7 @@ end
 
 def login_as(user, password)
   logout
-  visit url_for(:controller => 'account', :action=>'login', :only_path=>true)
+  visit url_for(controller: 'account', :action=>'login', :only_path=>true)
   fill_in 'username', :with => user
   fill_in 'password', :with => password
   page.find(:xpath, '//input[@name="login"]').click
@@ -287,7 +287,7 @@ def story_position(story)
 end
 
 def logout
-  path = url_for(:controller => 'account', :action=>'logout', :only_path=>true)
+  path = url_for(controller: 'account', :action=>'logout', :only_path=>true)
   if @sessiondriver
       @sessiondriver.submit :post, path, @task_params
   elsif page.driver.respond_to?(:post)

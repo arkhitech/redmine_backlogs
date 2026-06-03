@@ -1,7 +1,6 @@
 require 'date'
 
 class RbSprint < Version
-  unloadable
 
   validate :start_and_end_dates
 
@@ -22,7 +21,7 @@ class RbSprint < Version
      CASE #{table_name}.effective_date WHEN NULL THEN 1 ELSE 0 END #{dir},
      #{table_name}.effective_date #{dir}"
   end
-  scope :by_date, -> { order(by_date_clause) }
+  scope :by_date, -> { order(Arel.sql(by_date_clause)) }
   scope :in_project, lambda {|project| where(:project_id => project) }
 
   #depending on sharing mode

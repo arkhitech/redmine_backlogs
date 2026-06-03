@@ -6,7 +6,6 @@ module Backlogs
     def self.included(base)
       base.send(:include, InstanceMethods)
       base.class_eval do
-        unloadable
         %w[project_settings_tabs].each do |method_name|
           alias_method "#{method_name}_without_backlogs", method_name
           alias_method method_name, "#{method_name}_with_backlogs"
@@ -21,7 +20,7 @@ module Backlogs
         tabs << {:name => 'backlogs',
           :action => :manage_project_backlogs,
           :partial => 'backlogs/project_settings',
-          :label => :label_backlogs
+          label: :label_backlogs
         } if @project.module_enabled?('backlogs') and 
              User.current.allowed_to?(:configure_backlogs, nil, :global=>true)
         return tabs

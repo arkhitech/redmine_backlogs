@@ -1,7 +1,6 @@
 include RbCommonHelper
 
 class RbTaskboardsController < RbApplicationController
-  unloadable
 
   def show
     stories = @sprint.stories
@@ -53,7 +52,7 @@ class RbTaskboardsController < RbApplicationController
   def current
     sprint = @project.active_sprint
     if sprint
-      redirect_to :controller => 'rb_taskboards', :action => 'show', :sprint_id => sprint
+      redirect_to controller: 'rb_taskboards', action: 'show', :sprint_id => sprint
       return
     end
     respond_to do |format|

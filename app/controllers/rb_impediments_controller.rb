@@ -1,7 +1,6 @@
 include RbCommonHelper
 
 class RbImpedimentsController < RbApplicationController
-  unloadable
 
   def create
     @settings = Backlogs.settings

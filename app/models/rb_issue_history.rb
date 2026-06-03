@@ -1,11 +1,11 @@
 require 'pp'
 
-class RbIssueHistory < ActiveRecord::Base
+class RbIssueHistory < ApplicationRecord
   self.table_name = 'rb_issue_history'
   # attr_protected :created_at # hack, all attributes will be mass asigment
   belongs_to :issue
 
-  serialize :history, Array
+  serialize :history, type: Array
   after_save :touch_sprint
   after_initialize :init_history
   after_create :update_parent
@@ -29,12 +29,12 @@ class RbIssueHistory < ActiveRecord::Base
 
   def self.statuses
     Hash.new{|h, k|
-      s = IssueStatus.where(:id => k.to_i).take
+      s = IssueStatus.where(id: k.to_i).take
       if s.nil?
         s = IssueStatus.first.id
         puts "IssueStatus #{k.inspect} not found, using default #{s.id} instead"
       end
-      h[k] = {:id => s.id, :open => ! s.is_closed?, :success => s.is_closed? ? (s.default_done_ratio.nil? || s.default_done_ratio == 100) : false }
+      h[k] = {id: s.id, :open => ! s.is_closed?, :success => s.is_closed? ? (s.default_done_ratio.nil? || s.default_done_ratio == 100) : false }
       h[k]
     }
   end

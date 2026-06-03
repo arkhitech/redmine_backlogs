@@ -1,10 +1,9 @@
 require 'prawn'
-require 'backlogs_printable_cards'
+require_relative '../../lib/backlogs_printable_cards'
 
 include RbCommonHelper
 
 class RbStoriesController < RbApplicationController
-  unloadable
   include BacklogsPrintableCards
 
   def index

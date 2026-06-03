@@ -1,5 +1,5 @@
 redmine_version_file = File.expand_path("../../../lib/redmine/version.rb",__FILE__)
-if (!File.exists? redmine_version_file)
+if (!File.exist? redmine_version_file)
   redmine_version_file = File.expand_path("lib/redmine/version.rb");
 end
 version_file = IO.read(redmine_version_file)
@@ -10,7 +10,7 @@ gem "holidays", "~>1.0.3"
 gem "icalendar"
 #gem "nokogiri", "~>1.6.8"
 gem "open-uri-cached"
-#gem "prawn"
+gem "prawn"
 gem 'json'
 
 group :development do

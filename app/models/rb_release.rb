@@ -1,5 +1,5 @@
 require 'date'
-require 'linear_regression'
+require_relative '../../lib/linear_regression'
 
 class ReleaseBurndown
   def initialize(release)
@@ -153,13 +153,12 @@ class ReleaseBurndown
 
 end
 
-class RbRelease < ActiveRecord::Base
+class RbRelease < ApplicationRecord
   self.table_name = 'releases'
 
   RELEASE_STATUSES = %w(open closed)
   RELEASE_SHARINGS = %w(none descendants hierarchy tree system)
 
-  unloadable
 
   belongs_to :project, :inverse_of => :releases
   has_many :issues, :class_name => 'RbStory', :foreign_key => 'release_id', :dependent => :nullify

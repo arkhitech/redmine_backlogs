@@ -42,9 +42,9 @@ When /^I (try to )?move the story named (.+) above (.+)$/ do |attempt, story_sub
   attributes = story.attributes
   attributes[:next]             = nxt.id
 
-  path = url_for(:controller => 'rb_stories',
+  path = url_for(controller: 'rb_stories',
                                 :action => "update",
-                                :id => story.id,
+                                id: story.id,
                                 :only_path => true)
   @sessiondriver.submit :put, path, attributes
   verify_request_status(200) unless attempt
@@ -59,9 +59,9 @@ When /^I (try to )?move the story named (.+) to the (\d+)(?:st|nd|rd|th) positio
   attributes = story.attributes
   attributes[:next] = story_after(position, sprint.project, sprint).to_s
 
-  path = url_for(:controller => 'rb_stories',
+  path = url_for(controller: 'rb_stories',
                               :action => "update",
-                              :id => story.id,
+                              id: story.id,
                               :only_path => true)
   @sessiondriver.submit :put, path, attributes
   verify_request_status(200) unless attempt
@@ -84,30 +84,30 @@ When /^I (try to )?move the (\d+)(?:st|nd|rd|th) story to the (\d+|last)(?:st|nd
 
   path = url_for(:controller => :rb_stories,
                               :action => :update,
-                              :id => story_id,
+                              id: story_id,
                               :only_path => true)
-  @sessiondriver.submit :put, path, {:next => nxt, :project_id => @project.id}
+  @sessiondriver.submit :put, path, {:next => nxt, project_id: @project.id}
   verify_request_status(200) unless attempt
 
   @story = RbStory.find(story_id.to_i)
 end
 
 When /^I (try to )?request the server_variables resource$/ do |attempt|
-  visit url_for(:controller => :rb_server_variables, :action => :project, :project_id => @project.id, :format => 'js', :only_path => true, :context => 'backlogs')
+  visit url_for(:controller => :rb_server_variables, :action => :project, project_id: @project.id, :format => 'js', :only_path => true, :context => 'backlogs')
   verify_request_status(200) unless attempt
 end
 
 When /^I (try to )?update the impediment$/ do |attempt|
   path = url_for(:controller => :rb_impediments,
                               :action => :update,
-                              :id => @impediment_params['id'],
+                              id: @impediment_params['id'],
                               :only_path => true)
   @sessiondriver.submit :post, path, @impediment_params
   verify_request_status(200) unless attempt
 end
 
 When /^I (try to )?update the sprint$/ do |attempt|
-  path = url_for(:controller => 'rb_sprints',
+  path = url_for(controller: 'rb_sprints',
                               :action => "update",
                               :sprint_id => @sprint_params['id'],
                               :only_path => true)
@@ -158,7 +158,7 @@ end
 When /^I (try to )?update the story$/ do |attempt|
   path = url_for(:controller => :rb_stories,
                               :action => :update,
-                              :id => @story_params[:id],
+                              id: @story_params[:id],
                               :only_path => true)
   @sessiondriver.submit :put, path, @story_params
   verify_request_status(200) unless attempt
@@ -168,28 +168,28 @@ end
 When /^I (try to )?update the task$/ do |attempt|
   path = url_for(:controller => :rb_tasks,
                               :action => :update,
-                              :id => @task_params[:id],
+                              id: @task_params[:id],
                               :only_path => true)
   @sessiondriver.submit :put, path, @task_params
   verify_request_status(200) unless attempt
 end
 
 Given /^I visit the scrum statistics page$/ do
-  visit url_for(:controller => 'rb_all_projects', :action => 'statistics', :only_path => true)
+  visit url_for(controller: 'rb_all_projects', action: 'statistics', :only_path => true)
 end
 
 When /^I try to download the calendar feed$/ do
-  visit url_for({ :key => @api_key, :controller => 'rb_calendars', :action => 'ical', :project_id => @project, :format => 'xml', :only_path => true})
+  visit url_for({ key: @api_key, controller: 'rb_calendars', action: 'ical', project_id: @project, :format => 'xml', :only_path => true})
 end
 
 When /^I try to download the XML sheet for (.+)$/ do |sprint_name|
   sprint = RbSprint.find_by_name(sprint_name)
-  visit url_for({:key => @api_key, :controller => :rb_sprints, :action => :download,
+  visit url_for({key: @api_key, :controller => :rb_sprints, :action => :download,
                  :sprint_id => sprint, :format => :xml, :only_path => true})
 end
 
 When /^I view the master backlog$/ do
-  visit url_for(:controller => :projects, :action => :show, :id => @project, :only_path => true)
+  visit url_for(:controller => :projects, :action => :show, id: @project, :only_path => true)
   click_link("Backlogs")
 end
 
@@ -207,11 +207,11 @@ When /^I view issues tab with backlog columns/ do
 end
 
 When /^I view the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'show', :sprint_id => current_sprint.id, :only_path => true)
+  visit url_for(controller: 'rb_wikis', action: 'show', :sprint_id => current_sprint.id, :only_path => true)
 end
 
 When /^I edit the sprint notes$/ do
-  visit url_for(:controller => 'rb_wikis', :action => 'edit', :sprint_id => current_sprint.id, :only_path => true)
+  visit url_for(controller: 'rb_wikis', action: 'edit', :sprint_id => current_sprint.id, :only_path => true)
 end
 
 #FIXME this does not work well.
@@ -224,7 +224,7 @@ end
 When /^the browser fetches (.+) updated since (\d+) (\w+) (.+)$/ do |object_type, how_many, period, direction|
   date = eval("#{ how_many }.#{ period }.#{ direction=='from now' ? 'from_now' : 'ago' }")
   date = date.strftime("%B %d, %Y %H:%M:%S") + '.' + (date.to_f % 1 + 0.001).to_s.split('.')[1]
-  visit url_for(:controller => 'rb_updated_items', :action => :show, :project_id => @project.id, :only => object_type, :since => date, :only_path => true)
+  visit url_for(controller: 'rb_updated_items', :action => :show, project_id: @project.id, :only => object_type, :since => date, :only_path => true)
 end
 
 When /^I click (create|copy|save)$/ do |command|
@@ -270,7 +270,7 @@ When /^I update the status of task (.+?) to (.+?)$/ do |task, state|
   @task_params[:status_id] = state.id
   path = url_for(:controller => :rb_tasks,
                               :action => :update,
-                              :id => @task_params[:id],
+                              id: @task_params[:id],
                               :only_path => true)
   @sessiondriver.submit :put, path, @task_params
   verify_request_status(200)

@@ -213,7 +213,7 @@ module BacklogsPrintableCards
       }
 
       File.open(File.dirname(__FILE__) + '/labels/labels.yaml', 'w') do |dump|
-        YAML.dump(@@layouts, dump)
+        YAML.dump(@@layouts.transform_values { |v| v.instance_variable_get(:@layout).reject { |k, _| k == 'name' } }, dump)
       end
       File.open(File.dirname(__FILE__) + '/labels/labels-malformed.yaml', 'w') do |dump|
         YAML.dump(malformed_labels, dump)
@@ -222,7 +222,7 @@ module BacklogsPrintableCards
 
     @@layouts ||= {}
     begin
-      layouts = YAML::load_file(File.dirname(__FILE__) + '/labels/labels.yaml')
+      layouts = YAML.load_file(File.dirname(__FILE__) + '/labels/labels.yaml', permitted_classes: [CardPageLayout, Symbol])
       layouts.each_pair{|key, spec|
         if spec.instance_of?(CardPageLayout)
           layout = spec #new yaml stores and restores our class
@@ -272,7 +272,7 @@ module BacklogsPrintableCards
       f = nil
       ['-default', ''].each {|postfix|
         t = File.dirname(__FILE__) + "/labels/#{template}#{postfix}.glabels"
-        f = t if File.exists?(t)
+        f = t if File.exist?(t)
       }
       raise "No template for #{template}" unless f
       label = Nokogiri::XML(Zlib::GzipReader.open(f))

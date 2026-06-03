@@ -1,10 +1,10 @@
 <div class="contextual">
 <%= link_to_if_authorized l(:label_release_new),
-                          {:controller => 'rb_releases', :action => 'new', :project_id => @project},
-                          :class => 'icon icon-add' %>
+                          {controller: 'rb_releases', action: 'new', project_id: @project},
+                          class: 'icon icon-add' %>
 <%= link_to_if_authorized l(:label_release_multiview_new),
-                          {:controller => 'rb_releases_multiview', :action => 'new', :project_id => @project},
-                          :class => 'icon icon-add' %>
+                          {controller: 'rb_releases_multiview', action: 'new', project_id: @project},
+                          class: 'icon icon-add' %>
 </div>
 
 <h2><%=l(:label_release_planning)%></h2>

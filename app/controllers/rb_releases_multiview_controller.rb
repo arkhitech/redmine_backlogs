@@ -3,7 +3,6 @@ include RbFormHelper
 include ProjectsHelper
 
 class RbReleasesMultiviewController < RbApplicationController
-  unloadable
 
   def index
   end
@@ -23,7 +22,7 @@ class RbReleasesMultiviewController < RbApplicationController
 
       if @release_multiview.save
         flash[:notice] = l(:notice_successful_create)
-        redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+        redirect_to controller: 'rb_releases', action: 'index', project_id: @project
       end
     end
 
@@ -36,7 +35,7 @@ class RbReleasesMultiviewController < RbApplicationController
 
       if @release_multiview.update_attributes(params[:release_multiview])
         flash[:notice] = l(:notice_successful_update)
-        redirect_to :controller => 'rb_releases_multiview', :action => 'show', :release_multiview_id => @release_multiview
+        redirect_to controller: 'rb_releases_multiview', action: 'show', :release_multiview_id => @release_multiview
       end
     end
   end
@@ -46,7 +45,7 @@ class RbReleasesMultiviewController < RbApplicationController
 
   def destroy
     @release_multiview.destroy
-    redirect_to :controller => 'rb_releases', :action => 'index', :project_id => @project
+    redirect_to controller: 'rb_releases', action: 'index', project_id: @project
   end
 
 end

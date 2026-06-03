@@ -5,7 +5,6 @@ include RbCommonHelper
 # interface used for managing objects within a sprint. For
 # info about the taskboard, see RbTaskboardsController
 class RbSprintsController < RbApplicationController
-  unloadable
 
   # Accept download as API request as Redmine redirects XML format to this type
   accept_api_auth :download
@@ -113,13 +112,13 @@ class RbSprintsController < RbApplicationController
                                    where journalized_type = 'Issue' and journalized_id in (#{ids})")
     end
 
-    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project.identifier
+    redirect_to controller: 'rb_master_backlogs', action: 'show', project_id: @project.identifier
   end
 
   def close_completed
     @project.close_completed_versions
 
-    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
+    redirect_to controller: 'rb_master_backlogs', action: 'show', project_id: @project
   end
   
   def close
@@ -128,7 +127,7 @@ class RbSprintsController < RbApplicationController
     else
       @sprint.update_attributes({:status => 'closed'})
     end
-    redirect_to :controller => 'rb_master_backlogs', :action => 'show', :project_id => @project
+    redirect_to controller: 'rb_master_backlogs', action: 'show', project_id: @project
   end
  
 end

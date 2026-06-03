@@ -10,7 +10,6 @@ module Backlogs
       base.send(:include, InstanceMethods)
 
       base.class_eval do
-        unloadable # Send unloadable so it will not be unloaded in development
         after_action :add_backlogs_fields, :only => [:index, :show]
       end
     end
@@ -29,7 +28,7 @@ module Backlogs
               next unless story_trackers.include?(Integer(issue.at('.//tracker')['id']))
               issue << body.create_element('story_points', RbStory.find(issue.at('.//id').text).story_points.to_s)
               next unless RbStory.find(issue.at('.//id').text).release
-              issue << body.create_element('release', :id => RbStory.find(issue.at('.//id').text).release_id.to_s,
+              issue << body.create_element('release', id: RbStory.find(issue.at('.//id').text).release_id.to_s,
                                                       :name => RbStory.find(issue.at('.//id').text).release.to_s)
             }
             response.body = body.to_xml

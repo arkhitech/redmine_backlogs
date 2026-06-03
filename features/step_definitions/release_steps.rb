@@ -45,13 +45,13 @@ end
 When /^I add story (.+) to release (.+)$/ do |story_name, release_name|
   story = RbStory.find_by_subject(story_name)
   @story_params = {
-    :id => story.id,
+    id: story.id,
     :release_id => RbRelease.find_by_name(release_name).id
   }
   page.driver.post(
                       url_for(:controller => :rb_stories,
                               :action => :update,
-                              :id => @story_params[:id],
+                              id: @story_params[:id],
                               :only_path => true),
                       @story_params
                   )

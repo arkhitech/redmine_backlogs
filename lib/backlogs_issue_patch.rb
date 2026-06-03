@@ -7,7 +7,6 @@ module Backlogs
       base.send(:include, InstanceMethods)
 
       base.class_eval do
-        unloadable
 
         belongs_to :release, :class_name => 'RbRelease', :foreign_key => 'release_id'
 

@@ -2,7 +2,6 @@ include RbCommonHelper
 include ProjectsHelper
 
 class RbProjectSettingsController < RbApplicationController
-  unloadable
 
   def project_settings
     enabled = false
@@ -19,7 +18,7 @@ class RbProjectSettingsController < RbApplicationController
     else
       flash[:error] = t(:rb_project_settings_update_error)
     end
-    redirect_to :controller => 'projects', :action => 'settings', :id => @project,
+    redirect_to controller: 'projects', action: 'settings', id: @project,
                 :tab => 'backlogs'
   end
 

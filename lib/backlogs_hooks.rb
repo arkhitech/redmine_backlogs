@@ -93,24 +93,24 @@ module BacklogsPlugin
           issue_fields_rows do |rows|
 
             if issue.is_story?
-              rows.left l(:field_story_points), RbStory.find(issue.id).points_display, :class => 'story-points'
+              rows.left l(:field_story_points), RbStory.find(issue.id).points_display, class: 'story-points'
               unless issue.remaining_hours.nil?
-                rows.right l(:field_remaining_hours), l_hours(issue.remaining_hours), :class => 'remaining-hours'
+                rows.right l(:field_remaining_hours), l_hours(issue.remaining_hours), class: 'remaining-hours'
               end
 
               vbe = issue.velocity_based_estimate
-              rows.left l(:field_velocity_based_estimate), vbe ? vbe.to_s + ' days' : '-', :class => 'velocity-based-estimate'
+              rows.left l(:field_velocity_based_estimate), vbe ? vbe.to_s + ' days' : '-', class: 'velocity-based-estimate'
 
               unless issue.release_id.nil?
                 release = RbRelease.find(issue.release_id)
-                rows.left l(:field_release), link_to(release.name, url_for_prefix_in_hooks + url_for({:controller => 'rb_releases', :action => 'show', :release_id => release})), :class => 'release'
+                rows.left l(:field_release), link_to(release.name, url_for_prefix_in_hooks + url_for({controller: 'rb_releases', action: 'show', :release_id => release})), class: 'release'
                 relation_translate = l("label_release_relationship_#{RbStory.find(issue.id).release_relationship}")
-                rows.right l(:field_release_relationship), relation_translate, :class => 'release-relationship'
+                rows.right l(:field_release_relationship), relation_translate, class: 'release-relationship'
               end
             end
 
             if issue.is_task? && User.current.allowed_to?(:update_remaining_hours, project) != nil
-              rows.left l(:field_remaining_hours), issue.remaining_hours, :class => 'remaining-hours'
+              rows.left l(:field_remaining_hours), issue.remaining_hours, class: 'remaining-hours'
             end
 
           end
@@ -273,8 +273,8 @@ module BacklogsPlugin
           if User.current.allowed_to?(:edit_wiki_pages, project)
             snippet += '<span id="edit_wiki_page_action">'
             snippet += link_to l(:button_edit_wiki),
-                      url_for_prefix_in_hooks + url_for({:controller => 'rb_wikis', :action => 'edit', :sprint_id => version.id }),
-                      :class => 'icon icon-edit'
+                      url_for_prefix_in_hooks + url_for({controller: 'rb_wikis', action: 'edit', :sprint_id => version.id }),
+                      class: 'icon icon-edit'
             snippet += '</span>'
 
             # this wouldn't be necesary if the schedules plugin
