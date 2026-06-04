@@ -168,11 +168,11 @@ module Backlogs
           # update_parent :<
           tasklist = RbTask.where("root_id=? and lft>? and rgt<? and
                                           (
-                                            (? is NULL and not fixed_version_id is NULL)
+                                            (?::integer is NULL and not fixed_version_id is NULL)
                                             or
-                                            (not ? is NULL and fixed_version_id is NULL)
+                                            (not ?::integer is NULL and fixed_version_id is NULL)
                                             or
-                                            (not ? is NULL and not fixed_version_id is NULL and ?<>fixed_version_id)
+                                            (not ?::integer is NULL and not fixed_version_id is NULL and ?::integer<>fixed_version_id)
                                             or
                                             (tracker_id <> ?)
                                           )", self.root_id, self.lft, self.rgt,
