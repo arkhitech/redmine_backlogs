@@ -74,7 +74,7 @@ end
 
 Then /^show me the list of shared sprints$/ do
   header = [['id', 3], ['name', 18], ['project id', 5], ['sprint_start_date', 18], ['effective_date', 18], ['updated_on', 20]]
-  sprints = @project.shared_versions.scoped(:conditions => {:status => ['open', 'locked']}, :order => 'sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
+  sprints = @project.shared_versions.where(:status => ['open', 'locked']).order('sprint_start_date ASC, effective_date ASC').collect{|v| v.becomes(RbSprint) } 
   data = sprints.collect{|sprint| [sprint.id, sprint.name, sprint.project_id, sprint.start_date, sprint.effective_date, sprint.updated_on] }
 
   show_table("Sprints", header, data)
