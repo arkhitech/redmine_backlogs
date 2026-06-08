@@ -37,7 +37,7 @@ class RbReleasesController < RbApplicationController
   end
 
   def edit
-    if request.post? and @release.update_attributes(release_params)
+    if request.post? and @release.update(release_params)
       flash[:notice] = l(:notice_successful_update)
       redirect_to controller: 'rb_releases', action: 'show', :release_id => @release
 #    else
@@ -51,7 +51,7 @@ class RbReleasesController < RbApplicationController
     # attribs = Hash[*attribs.flatten]
     attribs = params.except(*except).permit!.to_h
     begin
-      result  = @release.update_attributes attribs
+      result  = @release.update attribs
     rescue => e
       Rails.logger.debug e
       Rails.logger.debug e.backtrace.join("\n")
